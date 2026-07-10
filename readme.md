@@ -3,7 +3,6 @@
 [![Flask](https://img.shields.io/badge/Flask-3.0.2-000000?logo=flask)](https://flask.palletsprojects.com/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0.23-CC0000?logo=sqlalchemy)](https://www.sqlalchemy.org/)
 [![aiohttp](https://img.shields.io/badge/aiohttp-3.10.3-2C5BB4?logo=aiohttp)](https://docs.aiohttp.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 **YaCut** — это сервис для создания коротких ссылок с дополнительной функцией асинхронной загрузки файлов на Яндекс Диск.
 

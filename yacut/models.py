@@ -1,4 +1,5 @@
-from datetime import UTC, datetime
+from datetime import datetime
+from datetime import timezone
 
 from . import db
 
@@ -15,7 +16,8 @@ class URLMap(db.Model):
     original = db.Column(db.String(512), nullable=False)
     short = db.Column(
         db.String(MAX_SHORT_ID_LENGTH), unique=True, nullable=False)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now(UTC))
+    timestamp = db.Column(
+        db.DateTime, index=True, default=datetime.now(timezone.utc))
 
 
 class File(db.Model):
@@ -28,4 +30,5 @@ class File(db.Model):
         db.String(MAX_SHORT_ID_LENGTH), unique=True, nullable=False)
     yandexdisk_path = db.Column(
         db.String(MAX_PATH_LENGTH), nullable=False)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now(UTC))
+    timestamp = db.Column(
+        db.DateTime, index=True, default=datetime.now(timezone.utc))
