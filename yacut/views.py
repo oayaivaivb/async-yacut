@@ -101,8 +101,11 @@ async def redirect_view(short_id):
                 return Response(
                     file_bytes,
                     headers={
-                        'Content-Type': response.headers.get('Content-Type', 'application/octet-stream'),
-                        'Content-Disposition': f"attachment; filename*=UTF-8''{safe_filename}"
+                        'Content-Type': (
+                            response.headers.get(
+                                'Content-Type', 'application/octet-stream')),
+                        'Content-Disposition': (
+                            f"attachment; filename*=UTF-8''{safe_filename}")
                     }
                 )
     abort(404)
