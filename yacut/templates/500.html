@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка сервера{% endblock %}
+
+{% block content %}
+  <main>
+    <section class="container my-5 px-4">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h1>500</h1>
+          <p class="lead">Что-то пошло не так</p>
+          <p><a href="{{ url_for('index_view') }}">Вернуться на главную</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

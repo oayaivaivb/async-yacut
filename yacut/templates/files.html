@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка файлов - YaCut{% endblock %}
+
+{% block content %}
+  <main>
+    <section class="container my-5 px-4">
+      <h1 class="text-center">Загрузка файлов</h1>
+      <p class="text-center my-4">
+        Загрузите файлы на Яндекс Диск и получите короткие ссылки для скачивания
+      </p>
+
+      <div class="container">
+        <div class="row my-3">
+          <div class="col-sm">
+          </div>
+          <div class="col-sm">
+            <form method="POST" enctype="multipart/form-data">
+              {{ form.csrf_token }}
+              <div>
+                <div>
+                  {{ form.files(class="form-control form-control-lg py-2 mb-3", multiple=True) }}
+                  {% if form.files.errors %}
+                    <p class="text-danger">
+                      {% for error in form.files.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+              </div>
+            </form>
+          </div>
+          <div class="col-sm">
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+              </div>
+              <div class="col-sm">
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.category or 'info' }}">{{ message }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-sm">
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% if uploaded_files %}
+        <div class="container mt-4">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="text-center">Загруженные файлы</h5>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Имя файла</th>
+                    <th>Ссылка</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for file in uploaded_files %}
+                    <tr>
+                      <td>{{ file.original_name }}</td>
+                      <td>
+                        <a href="{{ url_for('redirect_view', short_id=file.short, _external=True) }}">
+                          {{ url_for('redirect_view', short_id=file.short, _external=True) }}
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </section>
+  </main>
+{% endblock %}
