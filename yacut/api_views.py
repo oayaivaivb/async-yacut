@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import re
 
 from flask import jsonify, request, url_for
@@ -13,10 +14,12 @@ def api_get_id():
     """API Эндпоинт для получения уникального короткого ID."""
     data = request.get_json(silent=True)
     if not data:
-        raise InvalidAPIUsage('Отсутствует тело запроса', 400)
+        raise InvalidAPIUsage(
+            'Отсутствует тело запроса', HTTPStatus.BAD_REQUEST)
 
     if 'url' not in data or not data['url']:
-        raise InvalidAPIUsage('"url" является обязательным полем!', 400)
+        raise InvalidAPIUsage(
+            '"url" является обязательным полем!', HTTPStatus.BAD_REQUEST)
 
     original = data['url']
     custom_id = data.get('custom_id')
@@ -24,24 +27,32 @@ def api_get_id():
         custom_id = custom_id.strip()
         if len(custom_id) > 16:
             raise InvalidAPIUsage(
-                'Указано недопустимое имя для короткой ссылки', 400)
+                'Указано недопустимое имя для короткой ссылки',
+                HTTPStatus.BAD_REQUEST
+            )
 
         if not re.match(r'^[A-Za-z0-9]+$', custom_id):
             raise InvalidAPIUsage(
-                'Указано недопустимое имя для короткой ссылки', 400)
+                'Указано недопустимое имя для короткой ссылки',
+                HTTPStatus.BAD_REQUEST
+            )
 
         if (custom_id == 'files' or
                 URLMap.query.filter_by(short=custom_id).first() or
                 File.query.filter_by(short=custom_id).first()):
             raise InvalidAPIUsage(
-                'Предложенный вариант короткой ссылки уже существует.', 400)
+                'Предложенный вариант короткой ссылки уже существует.',
+                HTTPStatus.BAD_REQUEST
+            )
 
         short_id = custom_id
     else:
         short_id = get_unique_short_id()
         if short_id is None:
             raise InvalidAPIUsage(
-                'Не удалось сгенерировать уникальный идентификатор', 500)
+                'Не удалось сгенерировать уникальный идентификатор',
+                HTTPStatus.INTERNAL_SERVER_ERROR
+            )
     new_url_map = URLMap(original=original, short=short_id)
     db.session.add(new_url_map)
     db.session.commit()
@@ -49,7 +60,7 @@ def api_get_id():
     return jsonify({
         'url': original,
         'short_link': short_link
-    }), 201
+    }), HTTPStatus.CREATED
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
@@ -58,5 +69,5 @@ def api_get_original(short_id):
     по короткому идентификатору."""
     url_map = URLMap.query.filter_by(short=short_id).first()
     if not url_map:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
-    return jsonify({'url': url_map.original}), 200
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
+    return jsonify({'url': url_map.original}), HTTPStatus.OK
