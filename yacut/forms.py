@@ -16,6 +16,7 @@ class URLMapForm(FlaskForm):
         validators=[
             Optional(),
             Length(
+                min=1,
                 max=16,
                 message='Длина короткой ссылки не должна превышать 16 символов'
             ),
