@@ -1,23 +1,19 @@
 from datetime import datetime
-from datetime import timezone
 
 from . import db
-
-
-MAX_SHORT_ID_LENGTH = 16
-MAX_PATH_LENGTH = 512
-MAX_ORIGINAL_NAME_LENGTH = 256
+from .constants import (MAX_ORIGINAL_NAME_LENGTH, MAX_PATH_LENGTH,
+                        MAX_SHORT_ID_LENGTH)
 
 
 class URLMap(db.Model):
     """Модель для хранения сопоставлений URL."""
 
     id = db.Column(db.Integer, primary_key=True)
-    original = db.Column(db.String(512), nullable=False)
+    original = db.Column(db.String(MAX_ORIGINAL_NAME_LENGTH), nullable=False)
     short = db.Column(
         db.String(MAX_SHORT_ID_LENGTH), unique=True, nullable=False)
     timestamp = db.Column(
-        db.DateTime, index=True, default=datetime.now(timezone.utc))
+        db.DateTime, index=True, default=datetime.now)
 
 
 class File(db.Model):
@@ -31,4 +27,4 @@ class File(db.Model):
     yandexdisk_path = db.Column(
         db.String(MAX_PATH_LENGTH), nullable=False)
     timestamp = db.Column(
-        db.DateTime, index=True, default=datetime.now(timezone.utc))
+        db.DateTime, index=True, default=datetime.now)
